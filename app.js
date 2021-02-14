@@ -33,27 +33,29 @@ const showImages = (images) => {
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
     gallery.appendChild(div)
   })
-}
+  toggleSpinner();
+};
 
 const getImages = (query) => {
+  toggleSpinner();
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
     .catch(err => console.log(err))
-}
+};
 
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  element.classList.toggle('added');
- 
+  element.classList.toggle('added'); 
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
   } else {
     sliders.pop(img);
   }
-}
+};
+
 var timer
 const createSlider = () => {
   // check slider image length
@@ -82,13 +84,14 @@ const createSlider = () => {
     src="${slide}"
     alt="">`;
     sliderContainer.appendChild(item)
-  })
+  });
+
   changeSlide(0)
   timer = setInterval(function () {
     slideIndex++;
     changeSlide(slideIndex);
   }, duration);
-}
+};
 
 // change slider index 
 const changeItem = index => {
@@ -97,24 +100,20 @@ const changeItem = index => {
 
 // change slide item
 const changeSlide = (index) => {
-
   const items = document.querySelectorAll('.slider-item');
   if (index < 0) {
     slideIndex = items.length - 1
     index = slideIndex;
-  };
-
+  }
   if (index >= items.length) {
     index = 0;
     slideIndex = 0;
   }
-
   items.forEach(item => {
     item.style.display = "none"
   })
-
   items[index].style.display = "block"
-}
+};
 
 searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
@@ -123,7 +122,7 @@ searchBtn.addEventListener('click', function () {
   getImages(search.value)
   sliders.length = 0;
   document.getElementById('search').value = ' ';
-})
+});
 
 sliderBtn.addEventListener('click', function () {
   const duration = document.getElementById('duration').value || 2000;
@@ -132,13 +131,13 @@ sliderBtn.addEventListener('click', function () {
     } else {
         createSlider();
     }
-})
+});
 
 // spinner
 const toggleSpinner = () => {
   const spinner = document.getElementById('loading-spinner');
     spinner.classList.toggle('d-none');
-}
+};
 
 
 
